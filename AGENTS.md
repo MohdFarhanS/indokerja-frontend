@@ -214,3 +214,53 @@ Before completing relevant work, run available checks such as:
 ```bash
 npm run build
 npm run lint
+
+Never claim a command passed unless it actually ran successfully.
+
+If the environment prevents validation, report the limitation clearly.
+
+Ambiguity
+---------
+
+If a decision could materially change:
+
+*   frontend architecture
+    
+*   API contracts
+    
+*   authentication behavior
+    
+*   security
+    
+*   routing strategy
+    
+*   major user workflow
+    
+
+stop and ask before implementing it.
+
+For small coding decisions, choose the simplest maintainable option.
+
+Completion Report
+-----------------
+
+At the end of a task report:
+
+*   summary
+    
+*   files created
+    
+*   files modified
+    
+*   dependencies changed
+    
+*   security considerations
+    
+*   validation commands and actual results
+    
+*   known limitations
+    
+*   recommended next stage
+    
+
+Do not automatically start the next stage.
