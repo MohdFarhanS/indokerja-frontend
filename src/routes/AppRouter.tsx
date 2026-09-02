@@ -3,10 +3,14 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { LoginPage } from '../features/auth/LoginPage'
 import { RegisterPage } from '../features/auth/RegisterPage'
 import { DashboardPage } from '../features/dashboard/DashboardPage'
+import { JobSeekerLayout } from '../components/layout/JobSeekerLayout'
+import { JobListPage } from '../features/job-seeker/JobListPage'
+import { JobDetailPage } from '../features/job-seeker/JobDetailPage'
+import { MyApplicationsPage } from '../features/job-seeker/MyApplicationsPage'
 import { useAuth } from '../hooks/useAuth'
 import type { UserRole } from '../types'
 
-function homeFor(role: UserRole) { return role === 'JOB_SEEKER' ? '/job-seeker' : '/company' }
+function homeFor(role: UserRole) { return role === 'JOB_SEEKER' ? '/job-seeker/jobs' : '/company' }
 
 function ProtectedRoute({ role, children }: { role: UserRole; children: ReactNode }) {
   const { user, isInitializing } = useAuth()
@@ -35,7 +39,12 @@ export function AppRouter() {
     <Route path="/" element={<RootRoute />} />
     <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
     <Route path="/register" element={<PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>} />
-    <Route path="/job-seeker" element={<ProtectedRoute role="JOB_SEEKER"><DashboardPage /></ProtectedRoute>} />
+    <Route path="/job-seeker" element={<ProtectedRoute role="JOB_SEEKER"><JobSeekerLayout /></ProtectedRoute>}>
+      <Route index element={<Navigate to="jobs" replace />} />
+      <Route path="jobs" element={<JobListPage />} />
+      <Route path="jobs/:jobId" element={<JobDetailPage />} />
+      <Route path="applications" element={<MyApplicationsPage />} />
+    </Route>
     <Route path="/company" element={<ProtectedRoute role="COMPANY"><DashboardPage /></ProtectedRoute>} />
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
