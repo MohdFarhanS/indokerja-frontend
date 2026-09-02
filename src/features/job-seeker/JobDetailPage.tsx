@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { applyToJob, getMyApplications } from '../../api/applications.api'
 import { getJobById } from '../../api/jobs.api'
 import type { JobDetail } from '../../types'
-import { formatDate, formatJobType, formatSalary } from './formatters'
+import { formatDate, formatJobType, formatSalary } from '../../utils/formatters'
 
 type LoadState = 'loading' | 'ready' | 'missing' | 'error'
 type Feedback = { kind: 'success' | 'error'; title: string; message?: string } | null
@@ -96,7 +96,13 @@ export function JobDetailPage() {
     }
   }
 
-  if (state === 'loading' || (job !== null && job.id !== jobId)) return <div className="detail-loading" role="status">Memuat detail lowongan...</div>
+  if (state === 'loading' || (job !== null && job.id !== jobId)) return <>
+    <p className="sr-only" role="status">Memuat detail lowongan...</p>
+    <div className="detail-grid detail-skeleton" aria-hidden="true">
+      <div className="detail-content"><div className="detail-skeleton-block"><span /><span /><span /></div><div className="detail-skeleton-block"><span /><span /><span /><span /></div></div>
+      <div className="detail-skeleton-block detail-skeleton-panel"><span /><span /><span /><span /></div>
+    </div>
+  </>
   if (state === 'missing') return <section className="state-card"><h1>Lowongan tidak ditemukan</h1>
     <p>Lowongan yang Anda cari tidak tersedia atau sudah tidak dapat ditemukan.</p>
     <Link className="primary-button button-link" to="/job-seeker/jobs">Kembali ke Lowongan</Link></section>

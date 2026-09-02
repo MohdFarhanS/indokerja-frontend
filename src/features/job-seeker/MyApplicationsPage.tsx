@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getMyApplications } from '../../api/applications.api'
+import { ApplicationStatusBadge } from '../../components/ApplicationStatusBadge'
+import { CardSkeletons, ErrorState } from '../../components/AsyncStates'
+import { EmptyState } from '../../components/EmptyState'
+import { PageHeader } from '../../components/PageHeader'
 import type { MyApplication } from '../../types'
-import { ApplicationStatusBadge } from './ApplicationStatusBadge'
-import { CardSkeletons, ErrorState } from './AsyncStates'
-import { formatDate, formatJobType } from './formatters'
+import { formatDate, formatJobType } from '../../utils/formatters'
 
 export function MyApplicationsPage() {
   const [applications, setApplications] = useState<MyApplication[]>([])
@@ -14,12 +16,11 @@ export function MyApplicationsPage() {
   }, [])
   useEffect(() => { void Promise.resolve().then(loadApplications) }, [loadApplications])
   return <>
-    <header className="page-heading"><p className="eyebrow">Perjalanan Karier</p><h1>Lamaran Saya</h1>
-      <p>Pantau perkembangan lamaran pekerjaan Anda.</p></header>
+    <PageHeader eyebrow="Perjalanan Karier" title="Lamaran Saya" description="Pantau perkembangan lamaran pekerjaan Anda." />
     {state === 'loading' && <><p className="sr-only" role="status">Memuat lamaran...</p><CardSkeletons /></>}
     {state === 'error' && <ErrorState title="Gagal memuat lamaran" message="Data lamaran Anda belum dapat dimuat." onRetry={() => { setState('loading'); void loadApplications() }} />}
-    {state === 'ready' && applications.length === 0 && <section className="state-card"><h2>Belum ada lamaran</h2>
-      <p>Anda belum melamar pekerjaan apa pun.</p><Link className="primary-button button-link" to="/job-seeker/jobs">Cari Lowongan</Link></section>}
+    {state === 'ready' && applications.length === 0 && <EmptyState title="Belum ada lamaran" message="Anda belum melamar pekerjaan apa pun."
+      action={<Link className="primary-button button-link" to="/job-seeker/jobs">Cari Lowongan</Link>} />}
     {state === 'ready' && applications.length > 0 && <div className="card-list">{applications.map((application) => <article className="job-card application-card" key={application.id}>
       <div className="card-title-row"><div><h2>{application.job.title}</h2><p className="company-name">{application.job.company.name}</p></div>
         <ApplicationStatusBadge status={application.status} /></div>

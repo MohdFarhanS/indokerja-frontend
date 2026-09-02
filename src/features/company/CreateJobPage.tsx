@@ -7,8 +7,9 @@ import { Link } from 'react-router-dom'
 import { z } from 'zod'
 import { createJob } from '../../api/jobs.api'
 import { RequiredFieldsNote, RequiredIndicator } from '../../components/RequiredField'
+import { PageHeader } from '../../components/PageHeader'
 import type { CreateJobPayload, JobType } from '../../types'
-import { formatJobType } from '../job-seeker/formatters'
+import { formatJobType } from '../../utils/formatters'
 
 const jobTypes: JobType[] = ['FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERNSHIP']
 const createJobSchema = z.object({
@@ -44,8 +45,7 @@ export function CreateJobPage() {
     <h1>Lowongan berhasil dibuat.</h1><p>Lowongan Anda sudah tersedia untuk pencari kerja.</p>
     <Link className="primary-button button-link" to="/company/jobs">Lihat Lowongan Saya</Link></section>
 
-  return <><header className="page-heading"><p className="eyebrow">Perusahaan</p><h1>Buat Lowongan</h1>
-    <p>Publikasikan peluang kerja baru untuk kandidat.</p></header>
+  return <><PageHeader eyebrow="Perusahaan" title="Buat Lowongan" description="Publikasikan peluang kerja baru untuk kandidat." />
     <section className="company-form-card">
       {apiError && <div className="api-error" role="alert"><strong>{apiError.title}</strong><p>{apiError.message}</p></div>}
       <form onSubmit={handleSubmit(submit)} noValidate>

@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCompanyJobs } from '../../api/jobs.api'
+import { CardSkeletons, ErrorState } from '../../components/AsyncStates'
+import { EmptyState } from '../../components/EmptyState'
+import { PageHeader } from '../../components/PageHeader'
 import type { CompanyJob } from '../../types'
-import { CardSkeletons, ErrorState } from '../job-seeker/AsyncStates'
-import { formatDate, formatJobType, formatSalary } from '../job-seeker/formatters'
+import { formatDate, formatJobType, formatSalary } from '../../utils/formatters'
 
 export function CompanyJobsPage() {
   const [jobs, setJobs] = useState<CompanyJob[]>([])
@@ -16,15 +18,12 @@ export function CompanyJobsPage() {
   useEffect(() => { void Promise.resolve().then(loadJobs) }, [loadJobs])
 
   return <>
-    <header className="page-heading company-page-heading">
-      <div><p className="eyebrow">Perusahaan</p><h1>Lowongan Saya</h1>
-        <p>Kelola lowongan pekerjaan yang telah Anda buat.</p></div>
-      <Link className="primary-button button-link" to="/company/jobs/new">+ Buat Lowongan</Link>
-    </header>
+    <PageHeader eyebrow="Perusahaan" title="Lowongan Saya" description="Kelola lowongan pekerjaan yang telah Anda buat."
+      action={<Link className="primary-button button-link" to="/company/jobs/new">+ Buat Lowongan</Link>} />
     {state === 'loading' && <><p className="sr-only" role="status">Memuat lowongan perusahaan...</p><CardSkeletons /></>}
     {state === 'error' && <ErrorState title="Gagal memuat lowongan" message="Lowongan perusahaan belum dapat dimuat." onRetry={() => { setState('loading'); void loadJobs() }} />}
-    {state === 'ready' && jobs.length === 0 && <section className="state-card"><h2>Belum ada lowongan</h2>
-      <p>Anda belum membuat lowongan pekerjaan.</p><Link className="primary-button button-link" to="/company/jobs/new">Buat Lowongan</Link></section>}
+    {state === 'ready' && jobs.length === 0 && <EmptyState title="Belum ada lowongan" message="Anda belum membuat lowongan pekerjaan."
+      action={<Link className="primary-button button-link" to="/company/jobs/new">Buat Lowongan</Link>} />}
     {state === 'ready' && jobs.length > 0 && <div className="card-list">{jobs.map((job) => <article className="job-card company-job-card" key={job.id}>
       <div><h2>{job.title}</h2><p className="job-meta">{job.location} <span aria-hidden="true">·</span> {formatJobType(job.jobType)}</p>
         <p className="salary">{formatSalary(job.salary)}</p><p className="job-description company-job-description">{job.description}</p>

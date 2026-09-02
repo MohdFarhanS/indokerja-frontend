@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getJobApplications, updateApplicationStatus } from '../../api/applications.api'
 import { getCompanyJobs } from '../../api/jobs.api'
+import { ApplicationStatusBadge } from '../../components/ApplicationStatusBadge'
+import { CardSkeletons } from '../../components/AsyncStates'
+import { EmptyState } from '../../components/EmptyState'
+import { PageHeader } from '../../components/PageHeader'
 import type { ApplicationStatus, CandidateApplication } from '../../types'
-import { ApplicationStatusBadge } from '../job-seeker/ApplicationStatusBadge'
-import { CardSkeletons } from '../job-seeker/AsyncStates'
-import { applicationStatusLabels, formatDate } from '../job-seeker/formatters'
+import { applicationStatusLabels, formatDate } from '../../utils/formatters'
 
 const statuses = ['APPLIED', 'REVIEWING', 'SHORTLISTED', 'REJECTED', 'ACCEPTED'] satisfies ApplicationStatus[]
 type LoadState = 'loading' | 'ready' | 'forbidden' | 'missing' | 'error'
@@ -93,14 +95,14 @@ export function CandidatesPage() {
     <button className="primary-button" type="button" onClick={retry}>Coba Lagi</button></section>
 
   return <><Link className="back-link" to="/company/jobs">← Kembali ke Lowongan Saya</Link>
-    <header className="page-heading"><p className="eyebrow">Kandidat</p><h1>Kandidat</h1>{jobTitle && <h2 className="candidate-job-title">{jobTitle}</h2>}
-      <p>Kandidat yang telah melamar lowongan ini.</p></header>
-    {applications.length === 0 ? <section className="state-card"><h2>Belum ada kandidat</h2><p>Belum ada pencari kerja yang melamar lowongan ini.</p></section> :
+    <PageHeader eyebrow="Perusahaan" title="Kandidat" description="Kandidat yang telah melamar lowongan ini." />
+    {jobTitle && <h2 className="candidate-job-title">{jobTitle}</h2>}
+    {applications.length === 0 ? <EmptyState title="Belum ada kandidat" message="Belum ada pencari kerja yang melamar lowongan ini." /> :
       <div className="card-list">{applications.map((application) => {
         const isUpdating = Boolean(updating[application.id]); const chosen = selected[application.id] ?? application.status
         const itemFeedback = feedback[application.id]
         return <article className="candidate-card" key={application.id}>
-          <div className="candidate-header"><div><h2>{application.jobSeeker.name}</h2><a href={`mailto:${application.jobSeeker.email}`}>{application.jobSeeker.email}</a></div>
+          <div className="candidate-header"><div><h2>{application.jobSeeker.name}</h2><p className="candidate-email">{application.jobSeeker.email}</p></div>
             <ApplicationStatusBadge status={application.status} /></div>
           <p className="date-text">Dilamar {formatDate(application.createdAt)}</p>
           <div className="status-controls"><div className="form-field"><label htmlFor={`status-${application.id}`}>Status Lamaran {application.jobSeeker.name}</label>
