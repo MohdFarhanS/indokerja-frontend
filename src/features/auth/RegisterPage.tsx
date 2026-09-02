@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { z } from 'zod'
 import { register as registerAccount } from '../../api/auth.api'
 import { PasswordField } from '../../components/PasswordField'
+import { RequiredFieldsNote } from '../../components/RequiredField'
 import { TextField } from '../../components/TextField'
 import type { UserRole } from '../../types'
 import { getAuthErrorMessage } from './apiError'
@@ -45,12 +46,12 @@ function SeekerForm({ onSuccess }: { onSuccess: () => void }) {
   const { register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<SeekerValues>({ resolver: zodResolver(seekerSchema), defaultValues: { password: '', confirmPassword: '' } })
   const password = useWatch({ control, name: 'password' })
   async function submit(values: SeekerValues) { setApiError(''); try { await registerAccount({ name: values.name.trim(), email: values.email.trim(), password: values.password, role: 'JOB_SEEKER' }); onSuccess() } catch (error) { setApiError(getAuthErrorMessage(error, 'register')) } }
-  return <form onSubmit={handleSubmit(submit)} noValidate><FormError message={apiError} />
-    <TextField label="Nama Lengkap" autoComplete="name" {...register('name')} error={errors.name?.message} />
-    <TextField label="Email" type="email" autoComplete="email" {...register('email')} error={errors.email?.message} />
-    <PasswordField label="Kata Sandi" autoComplete="new-password" {...register('password')} error={errors.password?.message} />
+  return <form onSubmit={handleSubmit(submit)} noValidate><FormError message={apiError} /><RequiredFieldsNote />
+    <TextField label="Nama Lengkap" autoComplete="name" required {...register('name')} error={errors.name?.message} />
+    <TextField label="Email" type="email" autoComplete="email" required {...register('email')} error={errors.email?.message} />
+    <PasswordField label="Kata Sandi" autoComplete="new-password" required {...register('password')} error={errors.password?.message} />
     <PasswordRequirements password={password} />
-    <PasswordField label="Konfirmasi Kata Sandi" autoComplete="new-password" {...register('confirmPassword')} error={errors.confirmPassword?.message} />
+    <PasswordField label="Konfirmasi Kata Sandi" autoComplete="new-password" required {...register('confirmPassword')} error={errors.confirmPassword?.message} />
     <SubmitButton pending={isSubmitting} />
   </form>
 }
@@ -60,12 +61,12 @@ function CompanyForm({ onSuccess }: { onSuccess: () => void }) {
   const { register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<CompanyValues>({ resolver: zodResolver(companySchema), defaultValues: { password: '', confirmPassword: '', companyDescription: '' } })
   const password = useWatch({ control, name: 'password' })
   async function submit(values: CompanyValues) { setApiError(''); try { await registerAccount({ companyName: values.companyName.trim(), email: values.email.trim(), password: values.password, role: 'COMPANY', ...(values.companyDescription.trim() ? { companyDescription: values.companyDescription.trim() } : {}) }); onSuccess() } catch (error) { setApiError(getAuthErrorMessage(error, 'register')) } }
-  return <form onSubmit={handleSubmit(submit)} noValidate><FormError message={apiError} />
-    <TextField label="Nama Perusahaan" autoComplete="organization" {...register('companyName')} error={errors.companyName?.message} />
-    <TextField label="Email" type="email" autoComplete="email" {...register('email')} error={errors.email?.message} />
-    <PasswordField label="Kata Sandi" autoComplete="new-password" {...register('password')} error={errors.password?.message} />
+  return <form onSubmit={handleSubmit(submit)} noValidate><FormError message={apiError} /><RequiredFieldsNote />
+    <TextField label="Nama Perusahaan" autoComplete="organization" required {...register('companyName')} error={errors.companyName?.message} />
+    <TextField label="Email" type="email" autoComplete="email" required {...register('email')} error={errors.email?.message} />
+    <PasswordField label="Kata Sandi" autoComplete="new-password" required {...register('password')} error={errors.password?.message} />
     <PasswordRequirements password={password} />
-    <PasswordField label="Konfirmasi Kata Sandi" autoComplete="new-password" {...register('confirmPassword')} error={errors.confirmPassword?.message} />
+    <PasswordField label="Konfirmasi Kata Sandi" autoComplete="new-password" required {...register('confirmPassword')} error={errors.confirmPassword?.message} />
     <div className="form-field"><label htmlFor="companyDescription">Deskripsi Perusahaan <span>(Opsional)</span></label><textarea id="companyDescription" rows={4} {...register('companyDescription')} />{errors.companyDescription && <p className="field-error" role="alert">{errors.companyDescription.message}</p>}</div>
     <SubmitButton pending={isSubmitting} />
   </form>
