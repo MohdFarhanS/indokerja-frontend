@@ -1,4 +1,5 @@
 import { useState, type InputHTMLAttributes } from 'react'
+import { RequiredIndicator } from './RequiredField'
 
 interface PasswordFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label: string
@@ -10,7 +11,7 @@ export function PasswordField({ label, error, id, ...props }: PasswordFieldProps
   const inputId = id ?? props.name
   return (
     <div className="form-field">
-      <label htmlFor={inputId}>{label}</label>
+      <label htmlFor={inputId}>{label}{props.required && <RequiredIndicator />}</label>
       <div className="password-input">
         <input id={inputId} type={visible ? 'text' : 'password'} aria-invalid={Boolean(error)} {...props} />
         <button type="button" className="visibility-button" onClick={() => setVisible((value) => !value)}

@@ -41,3 +41,21 @@ export interface SubmittedApplication {
   status: 'APPLIED'
   createdAt: string
 }
+
+export type CompanyJob = JobDetail
+
+export interface CreateJobPayload {
+  title: string
+  location: string
+  salary: number
+  jobType: JobType
+  description: string
+}
+
+export interface CandidateApplication {
+  id: string
+  status: ApplicationStatus
+  createdAt: string
+  job: { id: string; title: string }
+  jobSeeker: { name: string; email: string }
+}

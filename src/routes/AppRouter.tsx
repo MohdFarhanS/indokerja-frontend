@@ -2,15 +2,18 @@ import type { ReactNode } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { LoginPage } from '../features/auth/LoginPage'
 import { RegisterPage } from '../features/auth/RegisterPage'
-import { DashboardPage } from '../features/dashboard/DashboardPage'
 import { JobSeekerLayout } from '../components/layout/JobSeekerLayout'
+import { CompanyLayout } from '../components/layout/CompanyLayout'
+import { CandidatesPage } from '../features/company/CandidatesPage'
+import { CompanyJobsPage } from '../features/company/CompanyJobsPage'
+import { CreateJobPage } from '../features/company/CreateJobPage'
 import { JobListPage } from '../features/job-seeker/JobListPage'
 import { JobDetailPage } from '../features/job-seeker/JobDetailPage'
 import { MyApplicationsPage } from '../features/job-seeker/MyApplicationsPage'
 import { useAuth } from '../hooks/useAuth'
 import type { UserRole } from '../types'
 
-function homeFor(role: UserRole) { return role === 'JOB_SEEKER' ? '/job-seeker/jobs' : '/company' }
+function homeFor(role: UserRole) { return role === 'JOB_SEEKER' ? '/job-seeker/jobs' : '/company/jobs' }
 
 function ProtectedRoute({ role, children }: { role: UserRole; children: ReactNode }) {
   const { user, isInitializing } = useAuth()
@@ -45,7 +48,12 @@ export function AppRouter() {
       <Route path="jobs/:jobId" element={<JobDetailPage />} />
       <Route path="applications" element={<MyApplicationsPage />} />
     </Route>
-    <Route path="/company" element={<ProtectedRoute role="COMPANY"><DashboardPage /></ProtectedRoute>} />
+    <Route path="/company" element={<ProtectedRoute role="COMPANY"><CompanyLayout /></ProtectedRoute>}>
+      <Route index element={<Navigate to="jobs" replace />} />
+      <Route path="jobs" element={<CompanyJobsPage />} />
+      <Route path="jobs/new" element={<CreateJobPage />} />
+      <Route path="jobs/:jobId/candidates" element={<CandidatesPage />} />
+    </Route>
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
 }

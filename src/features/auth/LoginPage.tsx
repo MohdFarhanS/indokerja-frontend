@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { PasswordField } from '../../components/PasswordField'
+import { RequiredFieldsNote } from '../../components/RequiredField'
 import { TextField } from '../../components/TextField'
 import { useAuth } from '../../hooks/useAuth'
 import { getAuthErrorMessage } from './apiError'
@@ -43,8 +44,9 @@ export function LoginPage() {
       <h1>Masuk</h1><p className="auth-intro">Selamat datang kembali di IndoKerja</p>
       {apiError && <div className="api-error" role="alert">{apiError}</div>}
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <TextField label="Email" type="email" autoComplete="email" {...register('email')} error={errors.email?.message} />
-        <PasswordField label="Kata Sandi" autoComplete="current-password" {...register('password')} error={errors.password?.message} />
+        <RequiredFieldsNote />
+        <TextField label="Email" type="email" autoComplete="email" required {...register('email')} error={errors.email?.message} />
+        <PasswordField label="Kata Sandi" autoComplete="current-password" required {...register('password')} error={errors.password?.message} />
         <button className="primary-button" disabled={isSubmitting}>{isSubmitting ? 'Sedang masuk...' : 'Masuk'}</button>
       </form>
       <p className="auth-switch">Belum punya akun? <Link to="/register">Buat akun</Link></p>
