@@ -49,8 +49,8 @@ function SeekerForm({ onSuccess }: { onSuccess: () => void }) {
   return <form onSubmit={handleSubmit(submit)} noValidate><FormError message={apiError} /><RequiredFieldsNote />
     <TextField label="Nama Lengkap" autoComplete="name" required {...register('name')} error={errors.name?.message} />
     <TextField label="Email" type="email" autoComplete="email" required {...register('email')} error={errors.email?.message} />
-    <PasswordField label="Kata Sandi" autoComplete="new-password" required {...register('password')} error={errors.password?.message} />
-    <PasswordRequirements password={password} />
+    <PasswordField label="Kata Sandi" autoComplete="new-password" required aria-describedby="job-seeker-password-requirements" {...register('password')} error={errors.password?.message} />
+    <PasswordRequirements id="job-seeker-password-requirements" password={password} />
     <PasswordField label="Konfirmasi Kata Sandi" autoComplete="new-password" required {...register('confirmPassword')} error={errors.confirmPassword?.message} />
     <SubmitButton pending={isSubmitting} />
   </form>
@@ -64,8 +64,8 @@ function CompanyForm({ onSuccess }: { onSuccess: () => void }) {
   return <form onSubmit={handleSubmit(submit)} noValidate><FormError message={apiError} /><RequiredFieldsNote />
     <TextField label="Nama Perusahaan" autoComplete="organization" required {...register('companyName')} error={errors.companyName?.message} />
     <TextField label="Email" type="email" autoComplete="email" required {...register('email')} error={errors.email?.message} />
-    <PasswordField label="Kata Sandi" autoComplete="new-password" required {...register('password')} error={errors.password?.message} />
-    <PasswordRequirements password={password} />
+    <PasswordField label="Kata Sandi" autoComplete="new-password" required aria-describedby="company-password-requirements" {...register('password')} error={errors.password?.message} />
+    <PasswordRequirements id="company-password-requirements" password={password} />
     <PasswordField label="Konfirmasi Kata Sandi" autoComplete="new-password" required {...register('confirmPassword')} error={errors.confirmPassword?.message} />
     <div className="form-field"><label htmlFor="companyDescription">Deskripsi Perusahaan <span>(Opsional)</span></label><textarea id="companyDescription" rows={4} aria-invalid={Boolean(errors.companyDescription)} aria-describedby={errors.companyDescription ? 'companyDescription-error' : undefined} {...register('companyDescription')} />{errors.companyDescription && <p className="field-error" id="companyDescription-error" role="alert">{errors.companyDescription.message}</p>}</div>
     <SubmitButton pending={isSubmitting} />
