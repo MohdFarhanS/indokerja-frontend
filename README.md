@@ -173,7 +173,14 @@ saat ini. Restart development server setelah mengubah environment variable Vite.
 
 File `.env` sudah diabaikan Git dan tidak boleh di-commit. Environment variable
 frontend hanya boleh berisi konfigurasi yang aman diekspos ke browser. Jangan
-menaruh secret backend seperti `JWT_SECRET` atau `DATABASE_URL` di dalamnya.
+menaruh secret backend seperti `JWT_SECRET`, `DATABASE_URL`, atau `DIRECT_URL` di
+dalamnya.
+
+Pada production, konfigurasi publik browser menggunakan:
+
+```text
+VITE_API_BASE_URL=https://indokerja-backend.vercel.app/api
+```
 
 ## Menjalankan Aplikasi
 
@@ -443,9 +450,33 @@ atau kandidat.
 
 ## Deployment
 
-Konfigurasi dan URL deployment production akan ditambahkan setelah Stage 12
-selesai dan integrasi frontend-backend telah diverifikasi pada environment
-production. Repository ini belum mendokumentasikan URL production.
+Production Frontend: <https://indokerja-frontend-psi.vercel.app>
+
+Production Backend: <https://indokerja-backend.vercel.app>
+
+- Hosting: Vercel
+- Framework: React + TypeScript + Vite
+
+Frontend dan backend merupakan project Vercel yang terpisah. Frontend production
+mengakses REST API melalui `VITE_API_BASE_URL` dengan nilai publik
+`https://indokerja-backend.vercel.app/api`. Backend membatasi CORS ke exact
+production frontend origin `https://indokerja-frontend-psi.vercel.app`; CORS
+tidak menggantikan authentication atau authorization.
+
+Routing client menggunakan `BrowserRouter`. Konfigurasi production di
+`vercel.json` menyediakan SPA fallback dengan rewrite ke `/index.html`, sehingga
+direct navigation, page refresh, dan bookmark tetap bekerja pada route seperti
+`/job-seeker/applications`, `/company/jobs/new`, dan
+`/company/jobs/:jobId/candidates`.
+
+## Verifikasi Production
+
+Deployment production telah diverifikasi secara manual melalui workflow utama
+kedua role. Area yang diverifikasi mencakup authentication, role routing, job
+creation, job listing/detail, application flow, candidate status update dan
+sinkronisasi status, session restoration, CORS, SPA deep-link refresh, serta
+persistensi data di Neon. Verifikasi ini bukan klaim bahwa automated production
+E2E test telah dijalankan.
 
 ## Workflow Pengembangan
 
