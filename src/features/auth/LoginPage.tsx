@@ -35,7 +35,7 @@ export function LoginPage() {
   return <main className="auth-layout login-layout">
     <section className="marketing-panel" aria-labelledby="brand-heading">
       <div><p className="brand brand-light">Indo<span>Kerja</span></p>
-        <h1 id="brand-heading">Temukan pekerjaan.<br />Kelola lamaran.</h1>
+        <p id="brand-heading" className="marketing-heading">Temukan pekerjaan.<br />Kelola lamaran.</p>
         <p>Satu tempat untuk melihat peluang kerja dan mengikuti proses lamaran Anda.</p>
       </div><div className="brand-decoration" aria-hidden="true" />
     </section>

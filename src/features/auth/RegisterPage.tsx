@@ -67,7 +67,7 @@ function CompanyForm({ onSuccess }: { onSuccess: () => void }) {
     <PasswordField label="Kata Sandi" autoComplete="new-password" required {...register('password')} error={errors.password?.message} />
     <PasswordRequirements password={password} />
     <PasswordField label="Konfirmasi Kata Sandi" autoComplete="new-password" required {...register('confirmPassword')} error={errors.confirmPassword?.message} />
-    <div className="form-field"><label htmlFor="companyDescription">Deskripsi Perusahaan <span>(Opsional)</span></label><textarea id="companyDescription" rows={4} {...register('companyDescription')} />{errors.companyDescription && <p className="field-error" role="alert">{errors.companyDescription.message}</p>}</div>
+    <div className="form-field"><label htmlFor="companyDescription">Deskripsi Perusahaan <span>(Opsional)</span></label><textarea id="companyDescription" rows={4} aria-invalid={Boolean(errors.companyDescription)} aria-describedby={errors.companyDescription ? 'companyDescription-error' : undefined} {...register('companyDescription')} />{errors.companyDescription && <p className="field-error" id="companyDescription-error" role="alert">{errors.companyDescription.message}</p>}</div>
     <SubmitButton pending={isSubmitting} />
   </form>
 }
