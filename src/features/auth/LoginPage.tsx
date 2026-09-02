@@ -8,12 +8,19 @@ import { RequiredFieldsNote } from '../../components/RequiredField'
 import { TextField } from '../../components/TextField'
 import { useAuth } from '../../hooks/useAuth'
 import { getAuthErrorMessage } from './apiError'
+import { isWithinPasswordByteLimit } from './passwordValidation'
 
 const schema = z.object({
   email: z.string().trim().email('Masukkan alamat email yang valid.'),
-  password: z.string().min(1, 'Kata sandi wajib diisi.'),
+  password: z.string().min(1, 'Kata sandi wajib diisi.')
+    .refine(isWithinPasswordByteLimit, 'Kata sandi terlalu panjang.'),
 })
 type LoginValues = z.infer<typeof schema>
+
+function isAllowedDestination(path: unknown, role: 'JOB_SEEKER' | 'COMPANY'): path is string {
+  const prefix = role === 'JOB_SEEKER' ? '/job-seeker' : '/company'
+  return typeof path === 'string' && (path === prefix || path.startsWith(`${prefix}/`))
+}
 
 export function LoginPage() {
   const { login } = useAuth()
@@ -26,9 +33,9 @@ export function LoginPage() {
     setApiError('')
     try {
       const loggedInUser = await login(values)
-      const requested = (location.state as { from?: string } | null)?.from
+      const requested = (location.state as { from?: unknown } | null)?.from
       const ownRoute = loggedInUser.role === 'JOB_SEEKER' ? '/job-seeker' : '/company'
-      navigate(requested === ownRoute ? requested : ownRoute, { replace: true })
+      navigate(isAllowedDestination(requested, loggedInUser.role) ? requested : ownRoute, { replace: true })
     } catch (error) { setApiError(getAuthErrorMessage(error, 'login')) }
   }
 

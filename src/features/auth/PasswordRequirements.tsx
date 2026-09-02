@@ -1,13 +1,13 @@
 import { passwordRequirements } from './passwordValidation'
 
-export function PasswordRequirements({ password }: { password: string }) {
+export function PasswordRequirements({ password, id }: { password: string; id: string }) {
   const checks = passwordRequirements(password)
   const items = [
     ['length', 'Minimal 12 karakter'], ['uppercase', 'Mengandung huruf besar'],
     ['lowercase', 'Mengandung huruf kecil'], ['digit', 'Mengandung angka'],
     ['symbol', 'Mengandung simbol'],
   ] as const
-  return <div className="password-requirements">
+  return <div id={id} className="password-requirements">
     <p>Kata sandi harus memenuhi:</p>
     <ul>{items.map(([key, label]) => <li className={checks[key] ? 'met' : ''} key={key}>
       <span aria-hidden="true">{checks[key] ? '\u2713' : '\u25CB'}</span>{' '}

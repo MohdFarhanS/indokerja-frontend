@@ -79,6 +79,10 @@ export function CandidatesPage() {
       if (!mountedRef.current || pageRequestId !== requestIdRef.current) return
       let message = 'Status lamaran belum dapat diperbarui. Silakan coba lagi.'
       if (axios.isAxiosError(error) && error.response?.status === 400) message = 'Status tersebut sudah digunakan pada lamaran ini.'
+      else if (axios.isAxiosError(error) && error.response?.status === 409) {
+        message = 'Status lamaran berubah sejak terakhir dimuat. Silakan muat ulang dan coba lagi.'
+        setSelected((current) => ({ ...current, [application.id]: application.status }))
+      }
       else if (axios.isAxiosError(error) && error.response?.status === 403) message = 'Anda tidak memiliki akses untuk mengelola lamaran ini.'
       else if (axios.isAxiosError(error) && error.response?.status === 404) message = 'Lamaran tidak ditemukan.'
       setFeedback((current) => ({ ...current, [application.id]: { kind: 'error', message } }))
